@@ -14,23 +14,23 @@ pipeline {
         }
     
     
-        // stage('NPM dependiencies audi') {
-        //     steps {
-        //         sh '''
-        //             npm audit --audit-level=critical
-        //             echo $?
-        //         '''
-        //     }
-        // }
-
-        stage('OWASP Depencies Check') {
+        stage('NPM dependiencies audi') {
             steps {
-                dependencyCheck additionalArguments: '''--scan \'./\'
-                --out \'./\'
-                --format \'ALL\'
-                --prettyPrint''', odcInstallation: 'OWASP-DepCheck-10'
+                sh '''
+                    npm audit --audit-level=critical
+                    echo $?
+                '''
             }
         }
+
+        // stage('OWASP Depencies Check') {
+        //     steps {
+        //         dependencyCheck additionalArguments: '''--scan \'./\'
+        //         --out \'./\'
+        //         --format \'ALL\'
+        //         --prettyPrint''', odcInstallation: 'OWASP-DepCheck-10'
+        //     }
+        // }
     }
     
 }
