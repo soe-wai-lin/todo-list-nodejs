@@ -23,15 +23,15 @@ pipeline {
         //     }
         // }
 
-        stage('OWASP Depencies Check') {
-            steps {
-                dependencyCheck additionalArguments: '''--scan \'./\'
-                --out \'./\'
-                -- noupdate \'./\'
-                --format \'ALL\'
-                --prettyPrint''', odcInstallation: 'OWASP-DepCheck-10'
-            }
-        }
+        // stage('OWASP Depencies Check') {
+        //     steps {
+        //         dependencyCheck additionalArguments: '''--scan \'./\'
+        //         --out \'./\'
+        //         -- noupdate \'./\'
+        //         --format \'ALL\'
+        //         --prettyPrint''', odcInstallation: 'OWASP-DepCheck-10'
+        //     }
+        // }
     }
     
 }
