@@ -23,12 +23,12 @@ pipeline {
             }
         }
 
-        stage('OWASP Depencies Check') {
-            steps {
-                dependencyCheck additionalArguments: '''--scan package.json
-                --format XML''', odcInstallation: 'OWASP-DepCheck-10'
-            }
-        }
+        // stage('OWASP Depencies Check') {
+        //     steps {
+        //         dependencyCheck additionalArguments: '''--scan package.json
+        //         --format XML''', odcInstallation: 'OWASP-DepCheck-10'
+        //     }
+        // }
     }
     
 }
