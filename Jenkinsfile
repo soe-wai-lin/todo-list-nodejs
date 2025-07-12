@@ -17,8 +17,7 @@ pipeline {
         stage('NPM Dependiencies audit') {
             steps {
                 sh '''
-                    npm audit || true  // Continue even if vulnerabilities are found
-                    npm audit fix || true
+                    npm audit --audit-level=critical
                 '''
             }
         }
