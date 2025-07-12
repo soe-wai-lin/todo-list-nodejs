@@ -14,14 +14,14 @@ pipeline {
         }
     
     
-        // stage('NPM dependiencies audi') {
-        //     steps {
-        //         sh '''
-        //             npm audit --audit-level=critical
-        //             echo $?
-        //         '''
-        //     }
-        // }
+        stage('NPM dependiencies audit') {
+            steps {
+                sh '''
+                    npm audit --audit-level=critical
+                    echo $?
+                '''
+            }
+        }
 
         // stage('OWASP Depencies Check') {
         //     steps {
