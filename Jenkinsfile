@@ -17,21 +17,18 @@ pipeline {
         stage('NPM Dependiencies audit') {
             steps {
                 sh '''
-                    npm audit || true
+                    npm audit || true  // Continue even if vulnerabilities are found
                     npm audit fix || true
                 '''
             }
         }
 
-        // stage('OWASP Depencies Check') {
-        //     steps {
-        //         dependencyCheck additionalArguments: '''--scan \'./\'
-        //         --out \'./\'
-        //         -- noupdate \'./\'
-        //         --format \'ALL\'
-        //         --prettyPrint''', odcInstallation: 'OWASP-DepCheck-10'
-        //     }
-        // }
+        stage('OWASP Depencies Check') {
+            steps {
+                dependencyCheck additionalArguments: '''--scan package.json
+                --format XML''', odcInstallation: 'OWASP-DepCheck-10'
+            }
+        }
     }
     
 }
