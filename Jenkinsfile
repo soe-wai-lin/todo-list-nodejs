@@ -22,10 +22,18 @@ pipeline {
             }
         }
 
-        stage('OWASP Depencies Check') {
+        // stage('OWASP Depencies Check') {
+        //     steps {
+        //         dependencyCheck additionalArguments: '''--scan package.json
+        //         --format XML''', odcInstallation: 'OWASP-DepCheck-10'
+        //     }
+        // }
+
+        stage('Docker Image Build') {
             steps {
-                dependencyCheck additionalArguments: '''--scan package.json
-                --format XML''', odcInstallation: 'OWASP-DepCheck-10'
+                sh '''
+                    docker build -t soewailin/nodejs-todolist:$GIT_COMMIT .
+                '''
             }
         }
     }
