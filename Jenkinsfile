@@ -36,6 +36,46 @@ pipeline {
                 '''
             }
         }
+
+        stage('Trivy Scan Docker Image') {
+            steps {
+                sh '''
+                    trivy image soewailin/nodejs-todolist:$GIT_COMMIT \
+                        --severity LOW,MEDIUM \
+                        --exit-code 0 \
+                        --quiet \
+                        --format json -o trivy-image-Medium.json
+
+                    trivy image soewailin/nodejs-todolist:$GIT_COMMIT \
+                        --severity HIGH \
+                        --exit-code 0 \
+                        --quiet \
+                        --format json -o trivy-image-High.json
+                '''
+            }
+
+            post {
+                always {
+                    sh '''
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+                            -o trivy-image-Medium.html trivy-image-Medium.json
+
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
+                            -o trivy-image-Medium.xml trivy-image-Medium.json
+
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+                            -o trivy-image-High.html trivy-image-High.json
+
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
+                            -o trivy-image-High.xml trivy-image-High.json
+                    '''
+                }
+            }
+        }
     }
     
 }
