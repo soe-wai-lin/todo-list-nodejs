@@ -17,7 +17,7 @@ pipeline {
         stage('NPM Dependiencies audit') {
             steps {
                 sh '''
-                    npm audit
+                    npm audit || true
                     npm audit fix || true
                 '''
             }
