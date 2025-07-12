@@ -76,6 +76,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry(credentialsId: 'dockerhub-creds') {
+                    sh '''
+                        docker push soewailin/nodejs-todolist:$GIT_COMMIT 
+                    '''
+                }
+            }
+        }
     }
     
 }
