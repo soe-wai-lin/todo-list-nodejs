@@ -17,7 +17,7 @@ pipeline {
         stage('NPM dependiencies audit') {
             steps {
                 sh '''
-                    npm audit --audit-level=critical
+                    npm audit --audit-level=high
                     npm audit fix --force
                 '''
             }
