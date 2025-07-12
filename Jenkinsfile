@@ -14,10 +14,10 @@ pipeline {
         }
     
     
-        stage('NPM dependiencies audit') {
+        stage('NPM Dependiencies audit') {
             steps {
                 sh '''
-                    npm audit --audit-level=high
+                    npm audit
                     npm audit fix --force
                 '''
             }
