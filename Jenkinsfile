@@ -79,7 +79,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry(credentialsId: 'dockerhub-creds') {
+                withDockerRegistry(credentialsId: 'dockerhub-creds', url: "") {
                     sh '''
                         docker push soewailin/nodejs-todolist:$GIT_COMMIT 
                     '''
