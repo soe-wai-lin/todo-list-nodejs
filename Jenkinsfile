@@ -25,7 +25,7 @@ pipeline {
         stage('OWASP Depencies Check') {
             steps {
                 dependencyCheck additionalArguments: '''--scan package.json
-                --format XML  --noupdate''', odcInstallation: 'OWASP-DepCheck-10'
+                --format ALL  --noupdate''', odcInstallation: 'OWASP-DepCheck-10'
             }
         }
 
