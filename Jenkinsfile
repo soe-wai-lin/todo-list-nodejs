@@ -28,6 +28,8 @@ pipeline {
                 --format ALL  --noupdate''', odcInstallation: 'OWASP-DepCheck-10'
 
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+
+                junit allowEmptyResults: true, keepProperties: true, testResults: 'dependency-check-junit.xml'
             }
         }
 
