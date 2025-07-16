@@ -22,6 +22,22 @@ pipeline {
             }
         }
 
+        stage(''sonar-qube'') {
+            steps {
+                script {
+                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+                        sh '''
+                            sonar-scanner \
+                                -Dsonar.projectKey=nodejs \
+                                -Dsonar.sources=index.js \
+                                -Dsonar.host.url=http://192.168.122.110:9000 \
+                                -Dsonar.login=sqp_2a553f47095e5c0828ed71dfff205e921376347d
+                        '''
+                    }
+                }
+            }
+        }
+
         stage('OWASP Depencies Check') {
             steps {
                 dependencyCheck additionalArguments: '''--scan package.json
