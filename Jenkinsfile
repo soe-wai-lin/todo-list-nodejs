@@ -33,7 +33,7 @@ pipeline {
                         sh '''
                             $SONAR_SCANNER/bin/sonar-scanner \
                                 -Dsonar.projectKey=nodejs \
-                                -Dsonar.sources= . \
+                                -Dsonar.sources=. \
                                 -Dsonar.host.url=http://192.168.122.110:9000 \
                         '''
                     }
