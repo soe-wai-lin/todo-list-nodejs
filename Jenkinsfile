@@ -41,6 +41,14 @@ pipeline {
             }
         }
 
+        stage('Quality Gate') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+                }
+            }
+        }
+
         stage('OWASP Depencies Check') {
             steps {
                 dependencyCheck additionalArguments: '''--scan package.json
