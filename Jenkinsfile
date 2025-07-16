@@ -122,7 +122,7 @@ pipeline {
             }
         }
 
-        stage('K8s Image Update')
+        stage('K8s Image Update') {
             when {
                 branch 'PR* '
             }
