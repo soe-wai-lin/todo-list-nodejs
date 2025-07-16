@@ -3,7 +3,7 @@ pipeline {
         label 'Jenkins-Agent'
     }
     tools {
-        nodejs 'nodejs-22.6.0'    
+        nodejs 'nodejs-18.20.8'    
     }
 
     environment {
@@ -13,7 +13,9 @@ pipeline {
     stages {
         stage('Install dependencies') {
             steps {
-                sh 'npm install'   
+                sh '''
+                    npm install
+                '''   
             }
         }
    
