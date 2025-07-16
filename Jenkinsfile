@@ -3,7 +3,11 @@ pipeline {
         label 'Jenkins-Agent'
     }
     tools {
-        nodejs 'nodejs-22.6.0'  
+        nodejs 'nodejs-22.6.0'      
+    }
+
+    environment {
+        SONAR_SCANNER = tool 'sonarqube-scanner-6.1.0';
     }
 
     stages {
@@ -27,7 +31,7 @@ pipeline {
                 script {
                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
                         sh '''
-                            sonar-scanner \
+                            $SONAR_SCANNER/bin/sonar-scanner \
                                 -Dsonar.projectKey=nodejs \
                                 -Dsonar.sources=index.js \
                                 -Dsonar.host.url=http://192.168.122.110:9000 \
