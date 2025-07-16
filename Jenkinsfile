@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         SONAR_SCANNER = tool 'sonarqube-scanner-6.1.0';
-        github = credentials('gitHub')
+        github = credentials('jenkin-push-github')
     }
 
     stages {
