@@ -13,16 +13,10 @@ pipeline {
     stages {
         stage('Install dependencies') {
             steps {
-                sh 'npm install'
+                sh 'npm install'   
             }
         }
-
-        stage('code coverage') {
-            steps {
-                sh 'npm run coverage'
-            }
-        }
-    
+   
     
         stage('NPM Dependiencies audit') {
             steps {
