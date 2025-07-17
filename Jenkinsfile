@@ -132,6 +132,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
                     sh '''
                         git clone -b main https://github.com/soe-wai-lin/argo-nodejs-todo.git
+                        cd argo-nodejs-todo
                         git checkout main
                         git checkout -b feature-$BUILD_ID
                         sed -i "s#soewailin.*#soewailin/nodejs-todolist:$GIT_COMMIT" deployment.yaml
