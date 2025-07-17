@@ -9,7 +9,7 @@ pipeline {
 
     environment {
         SONAR_SCANNER = tool 'sonarqube-scanner-6.1.0';
-        github = credentials('jenkin-push-github')
+        GITHUB_TOKEN = credentials('jenkin-push-github')
     }
 
     stages {
@@ -123,28 +123,81 @@ pipeline {
                 }
             }
         }
-
         stage('K8s Image Update') {
             when {
                 branch 'PR*'
             }
             steps {
-                
-                    sh '''
-                        rm -rf argo-nodejs-todo
-                        git clone -b main https://github.com/soe-wai-lin/argo-nodejs-todo.git
-                        cd argo-nodejs-todo
-                        git checkout -b feature-$BUILD_ID
-                        sed -i "s#soewailin.*#soewailin/nodejs-todolist:$GIT_COMMIT#g" deployment.yaml
+                sh '''
+                    rm -rf argo-nodejs-todo
+                    git clone -b main https://github.com/soe-wai-lin/argo-nodejs-todo.git
+                    cd argo-nodejs-todo
 
-                        cat deployment.yaml
-                        git config user.email "jenkin@gmail.com"
-                        git remote set-url origin https://$github@github.com/soe-wai-lin/argo-nodejs-todo.git
-                        git add .
-                        git commit -m "update docker image"
-                        git push origin feature-$BUILD_ID
-                    '''
+                    git checkout -b feature-$BUILD_ID
+
+                    sed -i "s#soewailin/nodejs-todolist:.*#soewailin/nodejs-todolist:$GIT_COMMIT#g" deployment.yaml
+                    cat deployment.yaml
+
+                    git config user.email "jenkin@gmail.com"
+                    git config user.name "Jenkins CI"
+
+                    git remote set-url origin https://$GITHUB_TOKEN@github.com/soe-wai-lin/argo-nodejs-todo.git
+
+                    git add deployment.yaml
+                    git commit -m "Update Docker image to $GIT_COMMIT"
+
+                    git pull origin feature-$BUILD_ID --rebase || true
+                    git push origin feature-$BUILD_ID
+                '''
             }
+        }
+
+        stage('Create Pull Request') {
+            when {
+                branch 'PR*'
+            }
+            environment {
+                GITHUB_API_URL = "https://api.github.com/repos/soe-wai-lin/argo-nodejs-todo/pulls"
+            }
+            steps {
+                sh '''
+                    cat <<EOF > pr.json
+                    {
+                    "title": "Auto PR: Update image to $GIT_COMMIT",
+                    "head": "feature-$BUILD_ID",
+                    "base": "main",
+                    "body": "This pull request updates the image tag in deployment.yaml to $GIT_COMMIT"
+                    }
+                EOF
+
+                    curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+                        -H "Accept: application/vnd.github+json" \
+                        -d @pr.json $GITHUB_API_URL
+                '''
+    }
+}
+
+        // stage('K8s Image Update') {
+        //     when {
+        //         branch 'PR*'
+        //     }
+        //     steps {
+                
+        //             sh '''
+        //                 rm -rf argo-nodejs-todo
+        //                 git clone -b main https://github.com/soe-wai-lin/argo-nodejs-todo.git
+        //                 cd argo-nodejs-todo
+        //                 git checkout -b feature-$BUILD_ID
+        //                 sed -i "s#soewailin.*#soewailin/nodejs-todolist:$GIT_COMMIT#g" deployment.yaml
+
+        //                 cat deployment.yaml
+        //                 git config user.email "jenkin@gmail.com"
+        //                 git remote set-url origin https://$github@github.com/soe-wai-lin/argo-nodejs-todo.git
+        //                 git add .
+        //                 git commit -m "update docker image"
+        //                 git push -f origin feature-$BUILD_ID
+        //             '''
+        //     }
 
         
 
