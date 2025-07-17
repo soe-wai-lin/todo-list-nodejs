@@ -9,7 +9,7 @@ pipeline {
 
     environment {
         SONAR_SCANNER = tool 'sonarqube-scanner-6.1.0';
-        // github = credentials('jenkin-push-github')
+        github = credentials('jenkin-push-github')
     }
 
     stages {
@@ -129,7 +129,7 @@ pipeline {
                 branch 'feature1'
             }
             steps {
-                withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
+                
                     sh '''
                         rm -rf argo-nodejs-todo
                         git clone -b main https://github.com/soe-wai-lin/argo-nodejs-todo.git
@@ -144,7 +144,6 @@ pipeline {
                         git commit -m "update docker image"
                         git push origin feature-$BUILD_ID
                     '''
-                }
             }
 
         
