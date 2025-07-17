@@ -148,7 +148,19 @@ pipeline {
                 }
             }
 
-            stage('Raise PR') {
+        
+
+            post {
+                always {
+                    script {
+                        (fileExist('argo-nodejs-todo')) {
+                            sh 'rm -rf argo-nodejs-todo'
+                        }
+                    }
+                }
+            }
+        }
+        stage('Raise PR') {
             when {
                 branch 'PR*'
             }
@@ -159,16 +171,6 @@ pipeline {
                             -d '{"title":"Auto PR","head":"feature-branch","base":"main","body":"Auto PR body"}' \
                             https://api.github.com/repos/soe-wai-lin/argo-nodejs-todo/pulls
                     '''
-                }
-            }
-
-            post {
-                always {
-                    script {
-                        (fileExist('argo-nodejs-todo')) {
-                            sh 'rm -rf argo-nodejs-todo'
-                        }
-                    }
                 }
             }
         }
