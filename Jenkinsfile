@@ -176,6 +176,7 @@ pipeline {
                 '''
     }
 }
+}
 
         // stage('K8s Image Update') {
         //     when {
@@ -225,6 +226,6 @@ pipeline {
         //         }
         //     }
         // }
-    }
+//     }
     
-}
+// }
