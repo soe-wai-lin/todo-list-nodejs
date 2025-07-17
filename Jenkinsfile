@@ -150,15 +150,15 @@ pipeline {
 
         
 
-            post {
-                always {
-                    script {
-                        (fileExist('argo-nodejs-todo')) {
-                            sh 'rm -rf argo-nodejs-todo'
-                        }
-                    }
-                }
-            }
+            // post {
+            //     always {
+            //         script {
+            //             (fileExist('argo-nodejs-todo')) {
+            //                 sh 'rm -rf argo-nodejs-todo'
+            //             }
+            //         }
+            //     }
+            // }
         }
         // stage('Raise PR') {
         //     when {
