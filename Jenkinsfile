@@ -126,7 +126,7 @@ pipeline {
 
         stage('K8s Image Update') {
             when {
-                branch 'PR*'
+                branch 'main'
             }
             steps {
                 withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
