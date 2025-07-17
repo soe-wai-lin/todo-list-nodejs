@@ -135,7 +135,9 @@ pipeline {
                         cd argo-nodejs-todo
                         git checkout main
                         git checkout -b feature-$BUILD_ID
-                        sed -i "s#soewailin.*#soewailin/nodejs-todolist:$GIT_COMMIT" deployment.yaml
+                        // sed -i "s#soewailin.*#soewailin/nodejs-todolist:$GIT_COMMIT" deployment.yaml
+                        sed -i "s#soewailin.*#soewailin/nodejs-todolist:$GIT_COMMIT#g" deployment.yaml
+
                         cat deployment.yaml
 
                         git config user.email "jenkin@gmail.com"
