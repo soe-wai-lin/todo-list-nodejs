@@ -126,7 +126,7 @@ pipeline {
 
         stage('K8s Image Update') {
             when {
-                branch 'main'
+                branch 'PR*'
             }
             steps {
                 sh '''
