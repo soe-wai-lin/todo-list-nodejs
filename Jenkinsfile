@@ -1,14 +1,15 @@
 pipeline {
-    agent {
-        label 'Jenkins-Agent'
-    }
+    agent any 
+    // agent {
+    //     label 'Jenkins-Agent'
+    // }
     tools {
         nodejs 'nodejs-18.20.8'    
     }
 
     environment {
         SONAR_SCANNER = tool 'sonarqube-scanner-6.1.0';
-        github = credentials('jenkin-push-github')
+        // github = credentials('jenkin-push-github')
     }
 
     stages {
@@ -23,7 +24,7 @@ pipeline {
         }
    
     
-        stage('NPM Dependiencies audit') {
+        stage('NPM Dependiencies Audit') {
             steps {
                 sh '''
                     npm audit --audit-level=critical
@@ -31,28 +32,28 @@ pipeline {
             }
         }
 
-        stage('sonar-qube') {
-            steps {
-                script {
-                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                        sh '''
-                            $SONAR_SCANNER/bin/sonar-scanner \
-                                -Dsonar.projectKey=nodejs \
-                                -Dsonar.sources=. \
-                                -Dsonar.host.url=http://192.168.122.110:9000 \
-                        '''
-                    }
-                }
-            }
-        }
+        // stage('sonar-qube') {
+        //     steps {
+        //         script {
+        //             withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+        //                 sh '''
+        //                     $SONAR_SCANNER/bin/sonar-scanner \
+        //                         -Dsonar.projectKey=nodejs1 \
+        //                         -Dsonar.sources=. \
+        //                         -Dsonar.host.url=http://13.212.165.227:9000 \
+        //                 '''
+        //             }
+        //         }
+        //     }
+        // }
 
-        stage('Quality Gate') {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
-                }
-            }
-        }
+        // stage('Quality Gate') {
+        //     steps {
+        //         script {
+        //             waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+        //         }
+        //     }
+        // }
 
         stage('OWASP Depencies Check') {
             steps {
@@ -125,22 +126,36 @@ pipeline {
 
         stage('K8s Image Update') {
             when {
-                branch 'PR* '
+                branch 'PR*'
             }
             steps {
-                sh '''
-                    git clone -b main https://github.com/soe-wai-lin/argo-nodejs-todo.git
-                    git checkout main
-                    git checkout -b feature-$BUILD_ID
-                    sed -i "s#soewailin.*#soewailin/nodejs-todolist:$GIT_COMMIT" deployment.yaml
-                    cat deployment.yaml
+                withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
+                    sh '''
+                        rm -rf argo-nodejs-todo
+                        git clone -b main https://github.com/soe-wai-lin/argo-nodejs-todo.git
+                        cd argo-nodejs-todo
+                        git checkout main
+                        git checkout -b feature-$BUILD_ID
+                        sed -i "s#soewailin.*#soewailin/nodejs-todolist:$GIT_COMMIT#g" deployment.yaml
 
-                    git config user.email "jenkin@gmail.com"
-                    git remote set-url origin https://$github@github.com/soe-wai-lin/argo-nodejs-todo.git
-                    git add .
-                    git commit -m "update docker image"
-                    git push origin feature-$BUILD_ID
-                '''
+                        cat deployment.yaml
+                        git config user.email "jenkin@gmail.com"
+                        git remote set-url origin https://$github@github.com/soe-wai-lin/argo-nodejs-todo.git
+                        git add .
+                        git commit -m "update docker image"
+                        git push origin feature-$BUILD_ID
+                    '''
+                }
+            }
+
+            post {
+                always {
+                    script {
+                        (fileExist('argo-nodejs-todo')) {
+                            sh 'rm -rf argo-nodejs-todo'
+                        }
+                    }
+                }
             }
         }
     }
