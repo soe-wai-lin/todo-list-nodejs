@@ -38,7 +38,7 @@ pipeline {
                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
                         sh '''
                             $SONAR_SCANNER/bin/sonar-scanner \
-                                -Dsonar.projectKey=nodejs \
+                                -Dsonar.projectKey=nodejs1 \
                                 -Dsonar.sources=. \
                                 -Dsonar.host.url=http://13.212.165.227:9000 \
                         '''
