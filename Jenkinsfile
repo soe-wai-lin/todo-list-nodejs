@@ -148,6 +148,16 @@ pipeline {
                     '''
                 }
             }
+
+            post {
+                always {
+                    script {
+                        (fileExist('argo-nodejs-todo')) {
+                            sh 'rm -rf argo-nodejs-todo'
+                        }
+                    }
+                }
+            }
         }
     }
     
