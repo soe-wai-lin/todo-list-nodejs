@@ -131,6 +131,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
                     sh '''
+                        rm -rf argo-nodejs-todo
                         git clone -b main https://github.com/soe-wai-lin/argo-nodejs-todo.git
                         cd argo-nodejs-todo
                         git checkout main
