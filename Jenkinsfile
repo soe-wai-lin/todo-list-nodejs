@@ -24,7 +24,7 @@ pipeline {
         }
    
     
-        stage('NPM Dependiencies audit') {
+        stage('NPM Dependiencies Audit') {
             steps {
                 sh '''
                     npm audit --audit-level=critical
