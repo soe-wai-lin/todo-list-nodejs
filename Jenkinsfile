@@ -9,7 +9,7 @@ pipeline {
 
     environment {
         SONAR_SCANNER = tool 'sonarqube-scanner-6.1.0';
-        // github = credentials('jenkin-push-github')
+        github = credentials('jenkin-push-github')
     }
 
     stages {
@@ -129,12 +129,11 @@ pipeline {
                 branch 'PR*'
             }
             steps {
-                withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
+                
                     sh '''
                         rm -rf argo-nodejs-todo
                         git clone -b main https://github.com/soe-wai-lin/argo-nodejs-todo.git
                         cd argo-nodejs-todo
-                        git checkout main
                         git checkout -b feature-$BUILD_ID
                         sed -i "s#soewailin.*#soewailin/nodejs-todolist:$GIT_COMMIT#g" deployment.yaml
 
@@ -145,16 +144,31 @@ pipeline {
                         git commit -m "update docker image"
                         git push origin feature-$BUILD_ID
                     '''
-                }
             }
 
-            post {
-                always {
-                    script {
-                        (fileExist('argo-nodejs-todo')) {
-                            sh 'rm -rf argo-nodejs-todo'
-                        }
-                    }
+        
+
+            // post {
+            //     always {
+            //         script {
+            //             (fileExist('argo-nodejs-todo')) {
+            //                 sh 'rm -rf argo-nodejs-todo'
+            //             }
+            //         }
+            //     }
+            // }
+        }
+        stage('Raise PR') {
+            when {
+                branch 'PR*'
+            }
+            steps {
+                withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
+                    sh '''
+                        curl -X POST -H "Authorization: token $github" \
+                            -d '{"title":"Auto PR","head":"feature-branch","base":"main","body":"Auto PR body"}' \
+                            https://api.github.com/repos/soe-wai-lin/argo-nodejs-todo/pulls
+                    '''
                 }
             }
         }
