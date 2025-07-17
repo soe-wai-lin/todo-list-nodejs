@@ -126,7 +126,7 @@ pipeline {
 
         stage('K8s Image Update') {
             when {
-                branch 'PR*'
+                branch 'feature1'
             }
             steps {
                 withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
@@ -160,20 +160,20 @@ pipeline {
                 }
             }
         }
-        stage('Raise PR') {
-            when {
-                branch 'PR*'
-            }
-            steps {
-                withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
-                    sh '''
-                        curl -X POST -H "Authorization: token $github" \
-                            -d '{"title":"Auto PR","head":"feature-branch","base":"main","body":"Auto PR body"}' \
-                            https://api.github.com/repos/soe-wai-lin/argo-nodejs-todo/pulls
-                    '''
-                }
-            }
-        }
+        // stage('Raise PR') {
+        //     when {
+        //         branch 'PR*'
+        //     }
+        //     steps {
+        //         withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
+        //             sh '''
+        //                 curl -X POST -H "Authorization: token $github" \
+        //                     -d '{"title":"Auto PR","head":"feature-branch","base":"main","body":"Auto PR body"}' \
+        //                     https://api.github.com/repos/soe-wai-lin/argo-nodejs-todo/pulls
+        //             '''
+        //         }
+        //     }
+        // }
     }
     
 }
