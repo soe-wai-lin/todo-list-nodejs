@@ -139,7 +139,7 @@ pipeline {
 
                         cat deployment.yaml
                         git config user.email "jenkin@gmail.com"
-                        git remote set-url origin https://$github@github.com/soe-wai-lin/argo-nodejs-todo.git
+                        git remote set-url origin https://github.com/soe-wai-lin/argo-nodejs-todo.git
                         git add .
                         git commit -m "update docker image"
                         git push origin feature-$BUILD_ID
