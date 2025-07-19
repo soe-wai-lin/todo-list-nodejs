@@ -27,36 +27,36 @@ pipeline {
         }
    
     
-        // stage('NPM Dependiencies Audit') {
-        //     steps {
-        //         sh '''
-        //             npm audit --audit-level=critical
-        //         '''
-        //     }
-        // }
+        stage('NPM Dependiencies Audit') {
+            steps {
+                sh '''
+                    npm audit --audit-level=critical
+                '''
+            }
+        }
 
-        // stage('sonar-qube') {
-        //     steps {
-        //         script {
-        //             withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-        //                 sh '''
-        //                     $SONAR_SCANNER/bin/sonar-scanner \
-        //                         -Dsonar.projectKey=nodejs1 \
-        //                         -Dsonar.sources=. \
-        //                         -Dsonar.host.url=http://13.212.165.227:9000 \
-        //                 '''
-        //             }
-        //         }
-        //     }
-        // }
+        stage('sonar-qube') {
+            steps {
+                script {
+                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+                        sh '''
+                            $SONAR_SCANNER/bin/sonar-scanner \
+                                -Dsonar.projectKey=nodejs \
+                                -Dsonar.sources=. \
+                                -Dsonar.host.url=http://175.41.181.17:9000 \
+                        '''
+                    }
+                }
+            }
+        }
 
-        // stage('Quality Gate') {
-        //     steps {
-        //         script {
-        //             waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
-        //         }
-        //     }
-        // }
+        stage('Quality Gate') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+                }
+            }
+        }
 
         stage('OWASP Depencies Check') {
             steps {
