@@ -27,13 +27,13 @@ pipeline {
         }
    
     
-        // stage('NPM Dependiencies Audit') {
-        //     steps {
-        //         sh '''
-        //             npm audit --audit-level=critical
-        //         '''
-        //     }
-        // }
+        stage('NPM Dependiencies Audit') {
+            steps {
+                sh '''
+                    npm audit --audit-level=critical
+                '''
+            }
+        }
 
         stage('sonar-qube') {
             steps {
