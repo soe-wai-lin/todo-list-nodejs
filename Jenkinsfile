@@ -124,9 +124,9 @@ pipeline {
             }
         }
         stage('K8s Image Update') {
-            when {
-                branch 'PR*'
-            }
+            // when {
+            //     branch 'PR*'
+            // }
             steps {
                 sh '''
                     rm -rf argo-nodejs-todo
@@ -153,9 +153,9 @@ pipeline {
         }
 
         stage('Create Pull Request') {
-            when {
-                branch 'PR*'
-            }
+            // when {
+            //     branch 'PR*'
+            // }
             environment {
                 GITHUB_API_URL = "https://api.github.com/repos/soe-wai-lin/argo-nodejs-todo/pulls"
             }
