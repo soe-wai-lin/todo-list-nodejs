@@ -180,7 +180,7 @@ pipeline {
             steps {
                 sh '''
                     cd ${REPO_NAME}
-                    echo $GITHUB_TOKEN | gh auth login --with-token
+                    // echo $GITHUB_TOKEN | gh auth login --with-token
                     gh pr create --base main --head ${FEATURE_BRANCH} --title "Auto PR from Jenkins" --body "This PR was created automatically by Jenkins pipeline."
                 '''
             }
