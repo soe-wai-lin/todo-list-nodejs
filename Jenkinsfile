@@ -10,6 +10,9 @@ pipeline {
     environment {
         SONAR_SCANNER = tool 'sonarqube-scanner-6.1.0';
         GITHUB_TOKEN = credentials('jenkin-push-github')
+        REPO_URL = 'https://github.com/soe-wai-lin/argo-nodejs-todo.git'
+        REPO_NAME = 'argo-nodejs-todo'
+        FEATURE_BRANCH = "feature-${BUILD_ID}"
     }
 
     stages {
@@ -152,80 +155,36 @@ pipeline {
             }
         }
 
-        stage('Create Pull Request') {
-            // when {
-            //     branch 'PR*'
-            // }
-            environment {
-                GITHUB_API_URL = "https://api.github.com/repos/soe-wai-lin/argo-nodejs-todo/pulls"
-            }
-            steps {
-                sh '''
-                    cat <<EOF > pr.json
-                    {
-                    "title": "Auto PR: Update image to $GIT_COMMIT",
-                    "head": "feature-$BUILD_ID",
-                    "base": "main",
-                    "body": "This pull request updates the image tag in deployment.yaml to $GIT_COMMIT"
-                    }
-                EOF
-
-                    curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
-                        -H "Accept: application/vnd.github+json" \
-                        -d @pr.json $GITHUB_API_URL
-                '''
-    }
-}
-}
-
-        // stage('K8s Image Update') {
-        //     when {
-        //         branch 'PR*'
+        // stage('Create Pull Request') {
+        //   environment {
+        //         GITHUB_API_URL = "https://api.github.com/repos/soe-wai-lin/argo-nodejs-todo/pulls"
         //     }
         //     steps {
-                
-        //             sh '''
-        //                 rm -rf argo-nodejs-todo
-        //                 git clone -b main https://github.com/soe-wai-lin/argo-nodejs-todo.git
-        //                 cd argo-nodejs-todo
-        //                 git checkout -b feature-$BUILD_ID
-        //                 sed -i "s#soewailin.*#soewailin/nodejs-todolist:$GIT_COMMIT#g" deployment.yaml
+        //         sh '''
+        //             cat <<EOF > pr.json
+        //             {
+        //             "title": "Auto PR: Update image to $GIT_COMMIT",
+        //             "head": "feature-$BUILD_ID",
+        //             "base": "main",
+        //             "body": "This pull request updates the image tag in deployment.yaml to $GIT_COMMIT"
+        //             }
+        //         EOF
 
-        //                 cat deployment.yaml
-        //                 git config user.email "jenkin@gmail.com"
-        //                 git remote set-url origin https://$github@github.com/soe-wai-lin/argo-nodejs-todo.git
-        //                 git add .
-        //                 git commit -m "update docker image"
-        //                 git push -f origin feature-$BUILD_ID
-        //             '''
-        //     }
-
-        
-
-            // post {
-            //     always {
-            //         script {
-            //             (fileExist('argo-nodejs-todo')) {
-            //                 sh 'rm -rf argo-nodejs-todo'
-            //             }
-            //         }
-            //     }
-            // }
-        }
-        // stage('Raise PR') {
-        //     when {
-        //         branch 'PR*'
-        //     }
-        //     steps {
-        //         withCredentials([string(credentialsId: 'jenkin-push-github', variable: 'github')]) {
-        //             sh '''
-        //                 curl -X POST -H "Authorization: token $github" \
-        //                     -d '{"title":"Auto PR","head":"feature-branch","base":"main","body":"Auto PR body"}' \
-        //                     https://api.github.com/repos/soe-wai-lin/argo-nodejs-todo/pulls
-        //             '''
-        //         }
+        //             curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+        //                 -H "Accept: application/vnd.github+json" \
+        //                 -d @pr.json $GITHUB_API_URL
+        //         '''
         //     }
         // }
-//     }
-    
-// }
+        stage('Create Pull Request') {
+            steps {
+                sh '''
+                    cd ${REPO_NAME}
+                    echo $GITHUB_TOKEN | gh auth login --with-token
+                    gh pr create --base main --head ${FEATURE_BRANCH} --title "Auto PR from Jenkins" --body "This PR was created automatically by Jenkins pipeline."
+                '''
+            }
+        }
+}
+
+ 
