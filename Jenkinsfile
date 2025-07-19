@@ -127,9 +127,6 @@ pipeline {
             }
         }
         stage('K8s Image Update') {
-            // when {
-            //     branch 'PR*'
-            // }
             steps {
                 sh '''
                     rm -rf argo-nodejs-todo
@@ -155,27 +152,6 @@ pipeline {
             }
         }
 
-        // stage('Create Pull Request') {
-        //   environment {
-        //         GITHUB_API_URL = "https://api.github.com/repos/soe-wai-lin/argo-nodejs-todo/pulls"
-        //     }
-        //     steps {
-        //         sh '''
-        //             cat <<EOF > pr.json
-        //             {
-        //             "title": "Auto PR: Update image to $GIT_COMMIT",
-        //             "head": "feature-$BUILD_ID",
-        //             "base": "main",
-        //             "body": "This pull request updates the image tag in deployment.yaml to $GIT_COMMIT"
-        //             }
-        //         EOF
-
-        //             curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
-        //                 -H "Accept: application/vnd.github+json" \
-        //                 -d @pr.json $GITHUB_API_URL
-        //         '''
-        //     }
-        // }
         stage('Create Pull Request') {
             steps {
                 sh '''
