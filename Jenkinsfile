@@ -161,14 +161,15 @@ pipeline {
                     set -e
                 '''
             }
-            post {
-                always {
-                    script {
-                        currentBuild.result = 'SUCCESS'
-                    }
-                }
-            }
+            
         }
 }
+    post {
+        always {
+            script {
+                currentBuild.result = 'SUCCESS'
+            }
+        }
+    }
 }
  
