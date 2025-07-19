@@ -158,6 +158,7 @@ pipeline {
                     cd ${REPO_NAME}
                     gh pr create --base main --head ${FEATURE_BRANCH} --title "Auto PR from Jenkins" --body "This PR was created automatically by Jenkins pipeline."
                     echo $?
+                    set -e
                 '''
             }
         }
