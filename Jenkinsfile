@@ -35,7 +35,7 @@ pipeline {
             }
         }
 
-        stage('sonar-qube') {
+        stage('SonarQube') {
             steps {
                 script {
                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
